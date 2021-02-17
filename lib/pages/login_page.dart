@@ -1,5 +1,8 @@
 import 'package:class_project/home_page.dart';
+import 'package:class_project/pages/detail_page.dart';
 import 'package:flutter/material.dart';
+import 'package:firebase_auth/firebase_auth.dart';
+import 'package:google_sign_in/google_sign_in.dart';
 
 class Login extends StatefulWidget {
   @override
@@ -7,6 +10,8 @@ class Login extends StatefulWidget {
 }
 
 class _LoginState extends State<Login> {
+  final FirebaseAuth _auth = FirebaseAuth.instance;
+  final GoogleSignIn _googleSignIn = GoogleSignIn();
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -41,11 +46,29 @@ class _LoginState extends State<Login> {
       bottomNavigationBar: Padding(
         padding: const EdgeInsets.only(bottom: 50,left: 40,right: 40),
         child: InkWell(
-          onTap: (){
-            Navigator.push(
+          onTap: ()async{
+              final GoogleSignInAccount googleSignInAccount = await _googleSignIn.signIn();
+              final GoogleSignInAuthentication googleSignInAuthentication =
+                  await googleSignInAccount.authentication;
+
+              final AuthCredential credential = GoogleAuthProvider.getCredential(
+                accessToken: googleSignInAuthentication.accessToken,
+                idToken: googleSignInAuthentication.idToken,
+              );
+
+              final AuthResult authResult = await _auth.signInWithCredential(credential);
+              final FirebaseUser user = authResult.user;
+
+              assert(!user.isAnonymous);
+              assert(await user.getIdToken() != null);
+
+            final FirebaseUser currentUser = await _auth.currentUser();
+            assert(user.uid == currentUser.uid);
+            if(user!=null){
+            Navigator.pushReplacement(
               context,
-              MaterialPageRoute(builder: (context) => HomePage()),
-            );
+              MaterialPageRoute(builder: (context) => DetailPage(user)),
+            );}
           },
           child: Container(
             height: 60,
