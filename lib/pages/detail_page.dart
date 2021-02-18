@@ -1,8 +1,12 @@
+//3. Display the schedule
+//4. Edit the User Profile
+
 import 'package:class_project/auth/api_services.dart';
 import 'package:class_project/home_page.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_dropdown/flutter_dropdown.dart';
+import 'package:fluttertoast/fluttertoast.dart';
 
 class DetailPage extends StatefulWidget {
   var user;
@@ -379,45 +383,64 @@ class _DetailPageState extends State<DetailPage> {
               alignment: Alignment.bottomRight,
               child: InkWell(
                 onTap: () {
-                  Navigator.pushReplacement(
-                    context,
-                    MaterialPageRoute(
-                        builder: (context) => HomePage(widget.user)),
-                  );
+                  if (widget.group != null &&
+                      widget.section != null &&
+                      widget.university != null) {
+                    apiService
+                        .saveUserDetail(
+                            widget.user.displayName,
+                            widget.user.email,
+                            widget.section,
+                            widget.group,
+                            widget.university,
+                            widget.user.photoUrl)
+                        .then((value) {
+                      Navigator.pushReplacement(
+                          context,
+                          MaterialPageRoute(
+                            builder: (context) => HomePage(widget.user),
+                          ));
+                    });
+                  } else {
+                    Fluttertoast.showToast(
+                        msg: "Select All Fields",
+                        toastLength: Toast.LENGTH_SHORT,
+                        gravity: ToastGravity.BOTTOM_RIGHT,
+                        timeInSecForIosWeb: 1,
+                        backgroundColor: Colors.black,
+                        textColor: Colors.white,
+                        fontSize: 16.0);
+                  }
+
+                  // if (detail != null) {
+                  //   Navigator.pushReplacement(
+                  //       context,
+                  //       MaterialPageRoute(
+                  //         builder: (context) => HomePage(widget.user),
+                  //       ));
+                  // }
                 },
-                child: InkWell(
-                  onTap: () async {
-                    await apiService.saveUserDetail(
-                        widget.user.displayName,
-                        widget.user.email,
-                        widget.section,
-                        widget.group,
-                        widget.university,
-                        widget.user.photoUrl);
-                  },
-                  //ye to done hai han aur kya karna tha? ab navigate wala ya user update wala ok 
-                  child: Container(
-                    height: 100,
-                    width: 100,
-                    decoration: BoxDecoration(
-                        boxShadow: [
-                          BoxShadow(
-                            color: Colors.deepPurple,
-                            blurRadius: 10.0, // soften the shadow
-                            spreadRadius: 0.0, //extend the shadow
-                            offset: Offset(
-                              5.0, // Move to right 10  horizontally
-                              5.0, // Move to bottom 10 Vertically
-                            ),
-                          )
-                        ],
-                        color: Color(0xffabd1c6),
-                        borderRadius: BorderRadius.circular(25)),
-                    child: Icon(
-                      Icons.navigate_next,
-                      color: Colors.white,
-                      size: 70,
-                    ),
+                child: Container(
+                  height: 100,
+                  width: 100,
+                  decoration: BoxDecoration(
+                      boxShadow: [
+                        BoxShadow(
+                          color: Colors.deepPurple,
+                          blurRadius: 10.0, // soften the shadow
+                          spreadRadius: 0.0, //extend the shadow
+                          offset: Offset(
+                            5.0, // Move to right 10  horizontally
+                            5.0, // Move to bottom 10 Vertically
+                          ),
+                        )
+                      ],
+                      color: Color(0xffabd1c6),
+                      borderRadius: BorderRadius.circular(25)),
+                  child: Icon(
+                    Icons.navigate_next,
+                    color: Colors.white,
+                    size: 70,
                   ),
                 ),
               ),

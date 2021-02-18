@@ -64,11 +64,13 @@ class _LoginState extends State<Login> {
 
             final FirebaseUser currentUser = await _auth.currentUser();
             assert(user.uid == currentUser.uid);
+
             if(user!=null){
             Navigator.pushReplacement(
               context,
               MaterialPageRoute(builder: (context) => DetailPage(user)),
             );}
+
           },
           child: Container(
             height: 60,
