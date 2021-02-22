@@ -1,6 +1,8 @@
 import 'package:class_project/pages/login_page.dart';
+import 'package:class_project/pages/main%20screen.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
+import 'package:onesignal_flutter/onesignal_flutter.dart';
 
 import 'home_page.dart';
 
@@ -13,6 +15,7 @@ class MyApp extends StatelessWidget {
   // This widget is the root of your application.
   @override
   Widget build(BuildContext context) {
+    OneSignal.shared.init("a1b8c730-a67e-47ac-9081-f8a481a6ad8c");
     return MaterialApp(
       debugShowCheckedModeBanner: false,
       title: 'Flutter Demo',
@@ -23,7 +26,7 @@ class MyApp extends StatelessWidget {
         future: FirebaseAuth.instance.currentUser(),
         builder: (context, snapshot) {
           if(snapshot.data!=null){
-            return HomePage(snapshot.data,);
+            return MainScreen(snapshot.data);
           }
           else{
           return Login();

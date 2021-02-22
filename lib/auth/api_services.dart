@@ -1,7 +1,7 @@
+import 'package:class_project/model/suggestion.dart';
 import 'package:class_project/model/timetable.dart';
 import 'package:class_project/model/user.dart';
 import 'package:dio/dio.dart';
-import 'package:intl/intl.dart';
 
 class ApiService {
   Dio dio = new Dio();
@@ -19,6 +19,47 @@ class ApiService {
       if (response.statusCode == 200) {
         data = User.fromJson(response.data);
       }
+    } on DioError catch (e) {
+      print(e.message);
+    }
+    return data;
+  }
+
+  Future<User> updateUserDetails(
+      String id, String section, String group) async {
+    User data;
+    try {
+      var response = await dio.put(
+        url + "/user/" + "user" + id,
+        data: {
+          "section": section,
+          "group": group,
+        },
+        options: new Options(contentType: Headers.jsonContentType),
+      );
+      if (response.statusCode == 200) {
+        data = User.fromJson(response.data);
+      }
+    } on DioError catch (e) {
+      print(e.message);
+    }
+    return data;
+  }
+
+  Future getSuggestion() async {
+    var data;
+    try {
+      var response = await dio.get(
+        url + "/suggestion",
+        options: new Options(contentType: Headers.jsonContentType),
+      );
+
+      // data = suggestionFromJson(response.data);
+      // print(response.data[0].feedback);
+      data =
+          (response.data as List).map((e) => Suggestion.fromJson(e)).toList();
+      // data = Suggestion.fromJson(response.data);
+      print(data);
     } on DioError catch (e) {
       print(e.message);
     }
@@ -64,5 +105,21 @@ class ApiService {
     if (response.statusCode == 201) {
       return response.data;
     }
+  }
+
+  void feedback(
+    String msg,
+    String section,
+    String group,
+  ) async {
+    await dio.post(
+      url + "/suggestion",
+      data: {
+        "feedback": msg,
+        "section": section,
+        "group": group,
+      },
+      options: new Options(contentType: Headers.jsonContentType),
+    );
   }
 }

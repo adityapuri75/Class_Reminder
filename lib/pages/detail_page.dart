@@ -3,10 +3,12 @@
 
 import 'package:class_project/auth/api_services.dart';
 import 'package:class_project/home_page.dart';
+import 'package:class_project/pages/main%20screen.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_dropdown/flutter_dropdown.dart';
 import 'package:fluttertoast/fluttertoast.dart';
+import 'package:onesignal_flutter/onesignal_flutter.dart';
 
 class DetailPage extends StatefulWidget {
   var user;
@@ -386,6 +388,7 @@ class _DetailPageState extends State<DetailPage> {
                   if (widget.group != null &&
                       widget.section != null &&
                       widget.university != null) {
+                    OneSignal.shared.sendTag(widget.section, widget.group);
                     apiService
                         .saveUserDetail(
                             widget.user.displayName,
@@ -395,10 +398,15 @@ class _DetailPageState extends State<DetailPage> {
                             widget.university,
                             widget.user.photoUrl)
                         .then((value) {
+                      // Navigator.pushReplacement(
+                      //     context,
+                      //     MaterialPageRoute(
+                      //       builder: (context) => HomePage(widget.user),
+                      //     ));
                       Navigator.pushReplacement(
                           context,
                           MaterialPageRoute(
-                            builder: (context) => HomePage(widget.user),
+                            builder: (context) => MainScreen(widget.user),
                           ));
                     });
                   } else {
