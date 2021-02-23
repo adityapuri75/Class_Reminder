@@ -46,8 +46,8 @@ class ApiService {
     return data;
   }
 
-  Future getSuggestion() async {
-    var data;
+ Future<List<Feedback>> getSuggestion() async {
+    List<Feedback> data;
     try {
       var response = await dio.get(
         url + "/suggestion",
@@ -55,9 +55,9 @@ class ApiService {
       );
 
       // data = suggestionFromJson(response.data);
-      // print(response.data[0].feedback);
+      // print(response.data);
       data =
-          (response.data as List).map((e) => Suggestion.fromJson(e)).toList();
+          (response.data as List).map((e) => Feedback.fromJson(e)).toList();
       // data = Suggestion.fromJson(response.data);
       print(data);
     } on DioError catch (e) {

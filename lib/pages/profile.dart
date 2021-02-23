@@ -3,6 +3,7 @@ import 'package:flutter/material.dart';
 import 'package:class_project/auth/api_services.dart';
 import 'package:flutter_dropdown/flutter_dropdown.dart';
 import 'package:fluttertoast/fluttertoast.dart';
+import 'package:onesignal_flutter/onesignal_flutter.dart';
 
 class Profile extends StatefulWidget {
   var user;
@@ -349,12 +350,15 @@ class _ProfileState extends State<Profile> {
                 ),
                 InkWell(
                   onTap: () async {
-                    print(data.sId);
+                    // OneSignal.shared.deleteTag();
+                    OneSignal.shared.deleteTag(data.section);
+                    
+                    OneSignal.shared
+                        .sendTag(widget.updatedSection, widget.updatedGroup);
                     await apiService
                         .updateUserDetails(data.sId, widget.updatedSection,
                             widget.updatedGroup)
                         .then((value) {
-                   
                       Fluttertoast.showToast(
                           msg: "Profile Updated",
                           toastLength: Toast.LENGTH_SHORT,

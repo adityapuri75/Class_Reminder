@@ -32,7 +32,7 @@ class _MainScreenState extends State<MainScreen> {
     // suggestions = Suggestions();
     // updates = Updates();
 
-    pages=[HomePage(widget.user),Profile(widget.user),Suggestions(widget.user),Updates()];
+    pages=[HomePage(widget.user),Suggestions(widget.user),Profile(widget.user),Updates()];
     currentPage = HomePage(widget.user);
   }
 
@@ -59,12 +59,6 @@ class _MainScreenState extends State<MainScreen> {
             textAlign: TextAlign.center,
           ),
           BottomNavyBarItem(
-            icon: Icon(Icons.people),
-            title: Text('Profile'),
-            activeColor: Colors.purpleAccent,
-            textAlign: TextAlign.center,
-          ),
-          BottomNavyBarItem(
             icon: Icon(Icons.message),
             title: Text(
               'Suggestions',
@@ -72,6 +66,13 @@ class _MainScreenState extends State<MainScreen> {
             activeColor: Colors.pink,
             textAlign: TextAlign.center,
           ),
+          BottomNavyBarItem(
+            icon: Icon(Icons.people),
+            title: Text('Profile'),
+            activeColor: Colors.purpleAccent,
+            textAlign: TextAlign.center,
+          ),
+
           BottomNavyBarItem(
             icon: Icon(Icons.update_sharp),
             title: Text('Updates'),

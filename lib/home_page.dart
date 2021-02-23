@@ -16,6 +16,7 @@ class HomePage extends StatefulWidget {
 
 class _HomePageState extends State<HomePage> with TickerProviderStateMixin {
   bool isloading = false;
+  bool isloading1= false;
 
   var date = DateFormat('EEEE').format(DateTime.now());
 
@@ -142,7 +143,11 @@ class _HomePageState extends State<HomePage> with TickerProviderStateMixin {
                                       }
                                       print(snapshot.data.length);
                                       List<TimeTable> schedule = snapshot.data;
-                                      return empty ? ListView.builder(
+
+                                      if (snapshot.data.length != null) {
+                                        isloading1 = true;
+                                      }
+                                      return isloading1 ? empty ? ListView.builder(
                                           physics:
                                               NeverScrollableScrollPhysics(),
                                           shrinkWrap: true,
@@ -438,7 +443,14 @@ class _HomePageState extends State<HomePage> with TickerProviderStateMixin {
                                                 ),
                                               ],
                                             ),
-                                          ));
+                                          )):Container(
+                                        color: Colors.white,
+                                        child: SpinKitWanderingCubes(
+                                          color: Colors.purple,
+                                          size: 150.0,
+
+                                        ),
+                                      );
                                     })
                               ],
                             ),
