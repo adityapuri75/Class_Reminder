@@ -44,6 +44,7 @@ class _SuggestionsState extends State<Suggestions> with TickerProviderStateMixin
         future: ApiService().getUserDetails(widget.user.email),
         builder: (context, snapshot) {
           return Scaffold(
+            backgroundColor: Colors.white,
             body: FutureBuilder<List<Feedback.Feedback>>(
                 future: ApiService().getSuggestion(),
                 builder: (context, snapshot) {
@@ -161,7 +162,7 @@ class _SuggestionsState extends State<Suggestions> with TickerProviderStateMixin
             appBar: AppBar(
               backgroundColor: Color(0xff948bff),
               centerTitle: true,
-              title: Text("Suggestions"),
+              title: Text("Suggestions / Feedback"),
             ),
             bottomNavigationBar: Padding(
               padding: const EdgeInsets.only(left: 10, right: 10, bottom: 10),

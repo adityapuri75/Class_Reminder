@@ -1,4 +1,3 @@
-
 import 'package:class_project/auth/api_services.dart';
 import 'package:class_project/model/timetable.dart';
 import 'package:class_project/model/user.dart';
@@ -16,7 +15,8 @@ class HomePage extends StatefulWidget {
 
 class _HomePageState extends State<HomePage> with TickerProviderStateMixin {
   bool isloading = false;
-  bool isloading1= false;
+  bool isloading1 = false;
+  bool isloading2 = false;
 
   var date = DateFormat('EEEE').format(DateTime.now());
 
@@ -112,7 +112,6 @@ class _HomePageState extends State<HomePage> with TickerProviderStateMixin {
                         ),
                       ),
                     ],
-                    // Text("Lectures (Sec-T)",style: TextStyle(color: Colors.deepPurple,fontSize: 30,fontWeight: FontWeight.bold),),
                     backgroundColor: Colors.white,
                     elevation: 0,
                   ),
@@ -141,316 +140,277 @@ class _HomePageState extends State<HomePage> with TickerProviderStateMixin {
                                       if (snapshot.data.length == 0) {
                                         empty = false;
                                       }
-                                      print(snapshot.data.length);
                                       List<TimeTable> schedule = snapshot.data;
+                                      if(snapshot.data!=null && snapshot.connectionState==ConnectionState.done){
+                                      return empty
+                                              ? ListView.builder(
+                                                  physics:
+                                                      NeverScrollableScrollPhysics(),
+                                                  shrinkWrap: true,
+                                                  itemCount: schedule.length,
+                                                  itemBuilder:
+                                                      (context, index) {
+                                                    var datatime =
+                                                        schedule[index].time;
+                                                    var datatime1 =
+                                                        datatime.substring(
+                                                            datatime.indexOf(
+                                                                    "-") +
+                                                                1,
+                                                            datatime.length);
+                                                    var x = datatime1.substring(
+                                                        0,
+                                                        datatime1.indexOf(':'));
+                                                    var x1 =
+                                                        datatime1.substring(
+                                                            datatime1.indexOf(
+                                                                    ":") +
+                                                                1,
+                                                            datatime1
+                                                                .indexOf(" "));
 
-                                      if (snapshot.data.length != null) {
-                                        isloading1 = true;
-                                      }
-                                      return isloading1 ? empty ? ListView.builder(
-                                          physics:
-                                              NeverScrollableScrollPhysics(),
-                                          shrinkWrap: true,
-                                          itemCount: schedule.length,
-                                          itemBuilder: (context, index) {
-                                            var datatime = schedule[index].time;
-                                            var datatime1 = datatime.substring(
-                                                datatime.indexOf("-") + 1,
-                                                datatime.length);
-                                            var x = datatime1.substring(
-                                                0, datatime1.indexOf(':'));
-                                            var x1 = datatime1.substring(
-                                                datatime1.indexOf(":") + 1,
-                                                datatime1.indexOf(" "));
+                                                    var xx = double.parse(x);
+                                                    var xx1 = double.parse(x1);
+                                                    var xr = xx * 60 + xx1;
 
-                                            var xx = double.parse(x);
-                                            var xx1 = double.parse(x1);
-                                            var xr = xx * 60 + xx1;
+                                                    var y =
+                                                        dateUtc.hour.toDouble();
+                                                    var y1 = dateUtc.minute
+                                                        .toDouble();
+                                                    var gg =
+                                                        dateUtc.day.toString();
 
-                                            var y = dateUtc.hour.toDouble();
-                                            var y1 = dateUtc.minute.toDouble();
-                                            var gg = dateUtc.day.toString();
+                                                    if (z1 == "PM") {
+                                                      y = y - 12;
+                                                    }
 
-                                            if (z1 == "PM") {
-                                              y = y - 12;
-                                            }
+                                                    var yr = y * 60 + y1;
+                                                    var timetabletime = xr;
+                                                    var timenow = yr;
 
-                                            var yr = y * 60 + y1;
-                                            var timetabletime = xr;
-                                            var timenow = yr;
+                                                    var z = datatime1.substring(
+                                                        datatime1.indexOf(" ") +
+                                                            1,
+                                                        datatime1.length);
 
-                                            var z = datatime1.substring(
-                                                datatime1.indexOf(" ") + 1,
-                                                datatime1.length);
+                                                    var last = 0;
 
-                                            var last = 0;
+                                                    if (timenow < 540 &&
+                                                        z1 == "AM") {
+                                                      last = 1;
+                                                    } else if (timenow > 300 &&
+                                                        z1 == "PM") {
+                                                      last = 0;
+                                                    } else {
+                                                      if (timetabletime >
+                                                              timenow &&
+                                                          z == z1 &&
+                                                          z == "AM" &&
+                                                          z1 == "AM") {
+                                                        last = 1;
+                                                      } else if (timetabletime >
+                                                              timenow &&
+                                                          z == z1 &&
+                                                          z == "PM" &&
+                                                          z1 == "PM") {
+                                                        last = 1;
+                                                      } else if (timenow >
+                                                              timetabletime &&
+                                                          z1 != z &&
+                                                          z1 == "AM" &&
+                                                          z == "PM") {
+                                                        last = 1;
+                                                      }
+                                                    }
 
-                                            // if(z==z1){
-                                            //   if(timetabletime>timenow){
-                                            //     last=1;
-                                            //   }
-                                            // }else if(z!=z1){
-                                            //   if(timetabletime<timenow){
-                                            //     last=1;
-                                            //   }
-                                            // }else if(z1=="PM"){
-                                            //   if(timenow>300){
-                                            //     last=0;
-                                            //   }
-                                            // }
-
-                                            // if(timetabletime>timenow && z==z1 && z=="AM" && z1 =="AM"){
-                                            //   last=1;
-                                            // }else if(timetabletime>timenow && z==z1 && z=="PM" && z1 == "PM"){
-                                            //   last=1;
-                                            // }else if(timenow>timetabletime && z1!=z && z1=="AM" && z=="PM"){
-                                            //   last=1;
-                                            // }
-
-                                            if (timenow < 540 && z1 == "AM") {
-                                              last = 1;
-                                            } else if (timenow > 300 &&
-                                                z1 == "PM") {
-                                              last = 0;
-                                            } else {
-                                              if (timetabletime > timenow &&
-                                                  z == z1 &&
-                                                  z == "AM" &&
-                                                  z1 == "AM") {
-                                                last = 1;
-                                              } else if (timetabletime >
-                                                      timenow &&
-                                                  z == z1 &&
-                                                  z == "PM" &&
-                                                  z1 == "PM") {
-                                                last = 1;
-                                              } else if (timenow >
-                                                      timetabletime &&
-                                                  z1 != z &&
-                                                  z1 == "AM" &&
-                                                  z == "PM") {
-                                                last = 1;
-                                              }
-                                            }
-
-                                            return Padding(
-                                                    padding:
-                                                        const EdgeInsets.only(
-                                                            top: 15),
-                                                    child: Container(
-                                                      height: 140,
-                                                      child: Row(
-                                                        children: [
-                                                          Container(
-                                                            width: MediaQuery.of(
-                                                                        context)
-                                                                    .size
-                                                                    .width /
-                                                                50,
-                                                            height: 140,
-                                                            decoration: BoxDecoration(
-                                                                color: color1[
-                                                                    index],
-                                                                borderRadius: BorderRadius.only(
-                                                                    topLeft: Radius
-                                                                        .circular(
-                                                                            20),
-                                                                    bottomLeft:
-                                                                        Radius.circular(
-                                                                            20))),
-                                                          ),
-                                                          Expanded(
-                                                            child: Container(
+                                                    return Padding(
+                                                      padding:
+                                                          const EdgeInsets.only(
+                                                              top: 15),
+                                                      child: Container(
+                                                        height: 140,
+                                                        child: Row(
+                                                          children: [
+                                                            Container(
+                                                              width: MediaQuery.of(
+                                                                          context)
+                                                                      .size
+                                                                      .width /
+                                                                  50,
                                                               height: 140,
                                                               decoration: BoxDecoration(
-                                                                  color: color2[
+                                                                  color: color1[
                                                                       index],
                                                                   borderRadius: BorderRadius.only(
-                                                                      topRight:
+                                                                      topLeft: Radius
+                                                                          .circular(
+                                                                              20),
+                                                                      bottomLeft:
                                                                           Radius.circular(
-                                                                              10),
-                                                                      bottomRight:
-                                                                          Radius.circular(
-                                                                              10))),
-                                                              child: Padding(
-                                                                padding:
-                                                                    const EdgeInsets
-                                                                            .only(
-                                                                        left:
-                                                                            15,
-                                                                        right:
-                                                                            15),
-                                                                child: Row(
-                                                                  mainAxisAlignment:
-                                                                      MainAxisAlignment
-                                                                          .spaceBetween,
-                                                                  children: [
-                                                                    Column(
-                                                                      crossAxisAlignment:
-                                                                          CrossAxisAlignment
-                                                                              .start,
-                                                                      mainAxisAlignment:
-                                                                          MainAxisAlignment
-                                                                              .center,
-                                                                      children: [
-                                                                        Text(
-                                                                          schedule[index]
-                                                                              .subject,
-                                                                          style: TextStyle(
-                                                                              fontSize: 20,
-                                                                              fontWeight: FontWeight.bold),
-                                                                        ),
-                                                                        SizedBox(
-                                                                          height:
-                                                                              6,
-                                                                        ),
-                                                                        Text(schedule[index]
-                                                                            .time)
-                                                                      ],
-                                                                    ),
-                                                                    Column(
-                                                                      mainAxisAlignment:
-                                                                          MainAxisAlignment
-                                                                              .center,
-                                                                      children: [
-                                                                        last == 1
-                                                                            ? Container(
-                                                                                height: 40,
-                                                                                width: 40,
-                                                                                decoration: BoxDecoration(image: DecorationImage(image: AssetImage("assets/pending.png")), borderRadius: BorderRadius.circular(20), color: Colors.transparent),
-                                                                              )
-                                                                            : Container(
-                                                                                height: 40,
-                                                                                width: 40,
-                                                                                decoration: BoxDecoration(image: DecorationImage(image: AssetImage("assets/done.png")), borderRadius: BorderRadius.circular(20), color: Colors.transparent),
-                                                                              )
-                                                                      ],
-                                                                    )
-                                                                  ],
+                                                                              20))),
+                                                            ),
+                                                            Expanded(
+                                                              child: Container(
+                                                                height: 140,
+                                                                decoration: BoxDecoration(
+                                                                    color: color2[
+                                                                        index],
+                                                                    borderRadius: BorderRadius.only(
+                                                                        topRight:
+                                                                            Radius.circular(
+                                                                                10),
+                                                                        bottomRight:
+                                                                            Radius.circular(10))),
+                                                                child: Padding(
+                                                                  padding: const EdgeInsets
+                                                                          .only(
+                                                                      left: 15,
+                                                                      right:
+                                                                          15),
+                                                                  child: Row(
+                                                                    mainAxisAlignment:
+                                                                        MainAxisAlignment
+                                                                            .spaceBetween,
+                                                                    children: [
+                                                                      Column(
+                                                                        crossAxisAlignment:
+                                                                            CrossAxisAlignment.start,
+                                                                        mainAxisAlignment:
+                                                                            MainAxisAlignment.center,
+                                                                        children: [
+                                                                          Text(
+                                                                            schedule[index].subject,
+                                                                            style:
+                                                                                TextStyle(fontSize: 20, fontWeight: FontWeight.bold),
+                                                                          ),
+                                                                          SizedBox(
+                                                                            height:
+                                                                                6,
+                                                                          ),
+                                                                          Text(schedule[index]
+                                                                              .time)
+                                                                        ],
+                                                                      ),
+                                                                      Column(
+                                                                        mainAxisAlignment:
+                                                                            MainAxisAlignment.center,
+                                                                        children: [
+                                                                          last == 1
+                                                                              ? Container(
+                                                                                  height: 40,
+                                                                                  width: 40,
+                                                                                  decoration: BoxDecoration(image: DecorationImage(image: NetworkImage("https://cdn3.iconfinder.com/data/icons/digital-marketing-4-11/65/169-512.png")), borderRadius: BorderRadius.circular(20), color: Colors.transparent),
+                                                                                )
+                                                                              : Container(
+                                                                                  height: 40,
+                                                                                  width: 40,
+                                                                                  decoration: BoxDecoration(image: DecorationImage(image: AssetImage("assets/done.png")), borderRadius: BorderRadius.circular(20), color: Colors.transparent),
+                                                                                )
+                                                                        ],
+                                                                      )
+                                                                    ],
+                                                                  ),
                                                                 ),
                                                               ),
                                                             ),
-                                                          ),
-                                                        ],
+                                                          ],
+                                                        ),
                                                       ),
-                                                    ),
-                                                  );
-                                          }):Padding(
-                                          padding:
-                                          const EdgeInsets.only(
-                                              top: 15),
-                                          child: Container(
-                                            height: 140,
-                                            child: Row(
-                                              children: [
-                                                Container(
-                                                  width: MediaQuery.of(
-                                                      context)
-                                                      .size
-                                                      .width /
-                                                      50,
-                                                  height: 140,
-                                                  decoration: BoxDecoration(
-                                                      color:
-                                                      color1[3],
-                                                      borderRadius: BorderRadius.only(
-                                                          topLeft: Radius
-                                                              .circular(
-                                                              20),
-                                                          bottomLeft:
-                                                          Radius.circular(
-                                                              20))),
-                                                ),
-                                                Expanded(
+                                                    );
+                                                  })
+                                              : Padding(
+                                                  padding:
+                                                      const EdgeInsets.only(
+                                                          top: 15),
                                                   child: Container(
                                                     height: 140,
-                                                    decoration: BoxDecoration(
-                                                        color:
-                                                        color2[3],
-                                                        borderRadius: BorderRadius.only(
-                                                            topRight:
-                                                            Radius.circular(
-                                                                10),
-                                                            bottomRight:
-                                                            Radius.circular(
-                                                                10))),
-                                                    child: Padding(
-                                                      padding:
-                                                      const EdgeInsets
-                                                          .only(
-                                                          left:
-                                                          15,
-                                                          right:
-                                                          15),
-                                                      child: Row(
-                                                        mainAxisAlignment:
-                                                        MainAxisAlignment
-                                                            .spaceBetween,
-                                                        children: [
-                                                          Column(
-                                                            crossAxisAlignment:
-                                                            CrossAxisAlignment
-                                                                .start,
-                                                            mainAxisAlignment:
-                                                            MainAxisAlignment
-                                                                .center,
-                                                            children: [
-                                                              Row(
+                                                    child: Row(
+                                                      children: [
+                                                        Container(
+                                                          width: MediaQuery.of(
+                                                                      context)
+                                                                  .size
+                                                                  .width /
+                                                              50,
+                                                          height: 140,
+                                                          decoration: BoxDecoration(
+                                                              color: color1[3],
+                                                              borderRadius: BorderRadius.only(
+                                                                  topLeft: Radius
+                                                                      .circular(
+                                                                          20),
+                                                                  bottomLeft: Radius
+                                                                      .circular(
+                                                                          20))),
+                                                        ),
+                                                        Expanded(
+                                                          child: Container(
+                                                            height: 140,
+                                                            decoration: BoxDecoration(
+                                                                color:
+                                                                    color2[3],
+                                                                borderRadius: BorderRadius.only(
+                                                                    topRight: Radius
+                                                                        .circular(
+                                                                            10),
+                                                                    bottomRight:
+                                                                        Radius.circular(
+                                                                            10))),
+                                                            child: Padding(
+                                                              padding:
+                                                                  const EdgeInsets
+                                                                          .only(
+                                                                      left: 15,
+                                                                      right:
+                                                                          15),
+                                                              child: Row(
+                                                                mainAxisAlignment:
+                                                                    MainAxisAlignment
+                                                                        .spaceBetween,
                                                                 children: [
-                                                                  Text(
-                                                                    "Hurray!  ",
-                                                                    style: TextStyle(color: Colors.blue, fontSize: 24, fontWeight: FontWeight.bold),
-                                                                  ),
-                                                                  Text(
-                                                                    "No Lectures Today",
-                                                                    style: TextStyle(fontSize: 18, fontWeight: FontWeight.bold),
+                                                                  Column(
+                                                                    crossAxisAlignment:
+                                                                        CrossAxisAlignment
+                                                                            .start,
+                                                                    mainAxisAlignment:
+                                                                        MainAxisAlignment
+                                                                            .center,
+                                                                    children: [
+                                                                      Row(
+                                                                        children: [
+                                                                          Text(
+                                                                            "Hurray!  ",
+                                                                            style: TextStyle(
+                                                                                color: Colors.blue,
+                                                                                fontSize: 24,
+                                                                                fontWeight: FontWeight.bold),
+                                                                          ),
+                                                                          Text(
+                                                                            "No Lectures Today",
+                                                                            style:
+                                                                                TextStyle(fontSize: 18, fontWeight: FontWeight.bold),
+                                                                          ),
+                                                                        ],
+                                                                      ),
+                                                                      SizedBox(
+                                                                        height:
+                                                                            6,
+                                                                      ),
+                                                                      // Text(snapshot
+                                                                      //     .data[index]
+                                                                      //     .time),
+                                                                    ],
                                                                   ),
                                                                 ],
                                                               ),
-                                                              SizedBox(
-                                                                height:
-                                                                6,
-                                                              ),
-                                                              // Text(snapshot
-                                                              //     .data[index]
-                                                              //     .time),
-                                                            ],
+                                                            ),
                                                           ),
-                                                          // Column(
-                                                          //   mainAxisAlignment:
-                                                          //       MainAxisAlignment
-                                                          //           .center,
-                                                          //   children: [
-                                                          //     Container(
-                                                          //       height: 30,
-                                                          //       width: 30,
-                                                          //       decoration: BoxDecoration(
-                                                          //           image: DecorationImage(
-                                                          //               image: AssetImage("assets/download.png")
-                                                          //           ),
-                                                          //           borderRadius:
-                                                          //               BorderRadius.circular(
-                                                          //                   15),
-                                                          //           color: Colors
-                                                          //               .transparent),
-                                                          //     )
-                                                          //   ],
-                                                          // )
-                                                        ],
-                                                      ),
+                                                        ),
+                                                      ],
                                                     ),
-                                                  ),
-                                                ),
-                                              ],
-                                            ),
-                                          )):Container(
-                                        color: Colors.white,
-                                        child: SpinKitWanderingCubes(
-                                          color: Colors.purple,
-                                          size: 150.0,
+                                                  ));}else{
+                                      return Container(child: Center(child: CircularProgressIndicator(),),);}
 
-                                        ),
-                                      );
                                     })
                               ],
                             ),
@@ -470,10 +430,14 @@ class _HomePageState extends State<HomePage> with TickerProviderStateMixin {
                                     future: apiService.getTimeTable(
                                         data.section, date1, data.group),
                                     builder: (context, snapshot) {
+                                      if (snapshot.data != null) {
+                                        isloading2 = true;
+                                      }
                                       bool empty = true;
                                       if (snapshot.data.length == 0) {
                                         empty = false;
                                       }
+                                    if(snapshot.data!=null && snapshot.connectionState==ConnectionState.done){
                                       return empty
                                           ? ListView.builder(
                                               physics:
@@ -560,26 +524,6 @@ class _HomePageState extends State<HomePage> with TickerProviderStateMixin {
                                                                           .time),
                                                                     ],
                                                                   ),
-                                                                  // Column(
-                                                                  //   mainAxisAlignment:
-                                                                  //       MainAxisAlignment
-                                                                  //           .center,
-                                                                  //   children: [
-                                                                  //     Container(
-                                                                  //       height: 30,
-                                                                  //       width: 30,
-                                                                  //       decoration: BoxDecoration(
-                                                                  //           image: DecorationImage(
-                                                                  //               image: AssetImage("assets/download.png")
-                                                                  //           ),
-                                                                  //           borderRadius:
-                                                                  //               BorderRadius.circular(
-                                                                  //                   15),
-                                                                  //           color: Colors
-                                                                  //               .transparent),
-                                                                  //     )
-                                                                  //   ],
-                                                                  // )
                                                                 ],
                                                               ),
                                                             ),
@@ -676,26 +620,6 @@ class _HomePageState extends State<HomePage> with TickerProviderStateMixin {
                                                                   //     .time),
                                                                 ],
                                                               ),
-                                                              // Column(
-                                                              //   mainAxisAlignment:
-                                                              //       MainAxisAlignment
-                                                              //           .center,
-                                                              //   children: [
-                                                              //     Container(
-                                                              //       height: 30,
-                                                              //       width: 30,
-                                                              //       decoration: BoxDecoration(
-                                                              //           image: DecorationImage(
-                                                              //               image: AssetImage("assets/download.png")
-                                                              //           ),
-                                                              //           borderRadius:
-                                                              //               BorderRadius.circular(
-                                                              //                   15),
-                                                              //           color: Colors
-                                                              //               .transparent),
-                                                              //     )
-                                                              //   ],
-                                                              // )
                                                             ],
                                                           ),
                                                         ),
@@ -704,7 +628,9 @@ class _HomePageState extends State<HomePage> with TickerProviderStateMixin {
                                                   ],
                                                 ),
                                               ),
-                                            );
+                                            );}
+                                    return Container(child: Center(child: CircularProgressIndicator(),),);
+
                                     })
                               ],
                             ),
@@ -713,75 +639,17 @@ class _HomePageState extends State<HomePage> with TickerProviderStateMixin {
                       ),
                     ),
                   ),
-                  // bottomNavigationBar: BottomNavigationBar(
-                  //   items: [
-                  //     BottomNavigationBarItem(
-                  //       icon: new Icon(Icons.home),
-                  //       title: new Text('Home'),
-                  //     ),
-                  //     BottomNavigationBarItem(
-                  //       icon: new Icon(Icons.chat),
-                  //       title: new Text('suggestions'),
-                  //     ),
-                  //   ],
-                  // ),
-            // bottomNavigationBar: BottomNavyBar(
-            //   selectedIndex: _currentIndex,
-            //   showElevation: true,
-            //   itemCornerRadius: 24,
-            //   curve: Curves.easeIn,
-            //   onItemSelected: (index) => setState(() => _currentIndex = index),
-            //   items: <BottomNavyBarItem>[
-            //     BottomNavyBarItem(
-            //       icon: Icon(Icons.apps),
-            //       title: Text('Home'),
-            //       activeColor: Colors.red,
-            //       textAlign: TextAlign.center,
-            //     ),
-            //     BottomNavyBarItem(
-            //       icon: Icon(Icons.people),
-            //       title: Text('Profile'),
-            //       activeColor: Colors.purpleAccent,
-            //       textAlign: TextAlign.center,
-            //     ),
-            //     BottomNavyBarItem(
-            //       icon: Icon(Icons.message),
-            //       title: Text(
-            //         'Suggestions',
-            //       ),
-            //       activeColor: Colors.pink,
-            //       textAlign: TextAlign.center,
-            //     ),
-            //     BottomNavyBarItem(
-            //       icon: Icon(Icons.update_sharp),
-            //       title: Text('Updates'),
-            //       activeColor: Colors.blue,
-            //       textAlign: TextAlign.center,
-            //     ),
-            //   ],
-            //
-            // ),
                 )
               : Container(
-                color: Colors.white,
-                child: SpinKitPouringHourglass(
-                  color: Colors.purple,
-                  size: 150.0,
-                  controller: AnimationController(
-                      vsync: this,
-                      duration: const Duration(milliseconds: 1200)),
-                ),
-              );
-          // Expanded(
-          //    child: Container(
-          //      color: Colors.white,
-          //      child: SpinKitPouringHourglass(
-          //        color: Colors.purple,
-          //        size: 150.0,
-          //      ),
-          //    ),
-          //
-          //  );
+                  color: Colors.white,
+                  child: SpinKitPouringHourglass(
+                    color: Colors.purple,
+                    size: 150.0,
+                    controller: AnimationController(
+                        vsync: this,
+                        duration: const Duration(milliseconds: 1200)),
+                  ),
+                );
         });
   }
 }
